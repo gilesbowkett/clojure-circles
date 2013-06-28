@@ -6,7 +6,7 @@
 (def the-width 808)
 (def the-height 500)
 
-(def random-x-y
+(defn random-x-y []
   {:x (int (rand the-width)) :y (int (rand the-height))})
 
 (defn circle [x y]
@@ -24,7 +24,7 @@
   (smooth)
   (frame-rate 20)
   (background 0)
-  (draw-circle random-x-y))
+  (draw-circle (random-x-y)))
 
 (defn draw [])
 
@@ -34,7 +34,5 @@
   :draw draw
   :size [the-width the-height])
 
-(defn -main []
-  (println (str "x: " (random-x-y :x) " "
-                "y: " (random-x-y :y))))
+(defn -main [] ())
 
