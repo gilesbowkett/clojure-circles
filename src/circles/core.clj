@@ -7,24 +7,23 @@
 (def the-height 500)
 
 (defn random-x-y []
-  {:x (int (rand the-width)) :y (int (rand the-height))})
+  (list (int (rand the-width)) (int (rand the-height))))
 
-(defn circle [x y]
+(defn circle [xy]
   (stroke 171 163 225)
   (stroke-weight 5)
   (fill 213 209 240)
 
-  (let [diam (random 100)]
+  (let [diam (random 100)
+        x (first xy)
+        y (second xy)]
     (ellipse x y diam diam)))
-
-(defn draw-circle [coords]
-  (circle (coords :x) (coords :y)))
 
 (defn setup []
   (smooth)
   (frame-rate 20)
   (background 0)
-  (draw-circle (random-x-y)))
+  (circle (random-x-y)))
 
 (defn draw [])
 
