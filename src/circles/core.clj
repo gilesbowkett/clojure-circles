@@ -3,6 +3,9 @@
 
 ; based on the "hello world" for Quil and the bit101 thing
 
+(def the-width 808)
+(def the-height 500)
+
 (defn setup []
   (smooth)
   (frame-rate 20)
@@ -17,7 +20,7 @@
     (ellipse x y diam diam)))
 
 (defn random-circle []
-  (circle (random (width)) (random (height))))
+  (circle (random the-width) (random the-height)))
 
 (defn draw []
   (random-circle))
@@ -26,7 +29,7 @@
   :title "Circles"
   :setup setup
   :draw draw
-  :size [808 500])
+  :size [the-width the-height])
 
 (defn -main [] ()) ; lein wants a `-main`, but quil doesn't need it
 
