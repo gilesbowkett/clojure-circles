@@ -9,9 +9,9 @@
   (background 0))
 
 (defn draw []
-  (stroke (random 255))
-  (stroke-weight (random 10))
-  (fill (random 255))
+  (stroke 171 163 225)
+  (stroke-weight 5)
+  (fill 213 209 240)
 
   (let [diam (random 100)
         x    (random (width))
