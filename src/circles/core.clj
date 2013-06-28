@@ -6,7 +6,7 @@
 (def the-width 808)
 (def the-height 500)
 
-(def starting-point
+(def random-x-y
   {:x (int (rand the-width)) :y (int (rand the-height))})
 
 (defn circle [x y]
@@ -17,11 +17,14 @@
   (let [diam (random 100)]
     (ellipse x y diam diam)))
 
+(defn draw-circle [coords]
+  (circle (coords :x) (coords :y)))
+
 (defn setup []
   (smooth)
   (frame-rate 20)
   (background 0)
-  (circle (starting-point :x) (starting-point :y)))
+  (draw-circle random-x-y))
 
 (defn draw [])
 
@@ -31,5 +34,7 @@
   :draw draw
   :size [the-width the-height])
 
-(defn -main [] ()) ; lein wants a `-main`, but quil doesn't need it
+(defn -main []
+  (println (str "x: " (random-x-y :x) " "
+                "y: " (random-x-y :y))))
 
