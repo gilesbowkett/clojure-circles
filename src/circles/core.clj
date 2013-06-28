@@ -8,19 +8,19 @@
   (frame-rate 20)
   (background 0))
 
-(defn random-circle []
+(defn circle [x y]
   (stroke 171 163 225)
   (stroke-weight 5)
   (fill 213 209 240)
 
-  (let [diam (random 100)
-        x    (random (width))
-        y    (random (height))]
+  (let [diam (random 100)]
     (ellipse x y diam diam)))
 
+(defn random-circle []
+  (circle (random (width)) (random (height))))
+
 (defn draw []
-  (random-circle)
-)
+  (random-circle))
 
 (defsketch example
   :title "Circles"
