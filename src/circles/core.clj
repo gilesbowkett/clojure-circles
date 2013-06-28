@@ -20,7 +20,7 @@
     (ellipse x y diam diam)))
 
 (defn random-circle []
-  (circle (random the-width) (random the-height)))
+  (circle (int (rand the-width)) (int (rand the-height))))
 
 (defn draw []
   (random-circle))
