@@ -1,10 +1,13 @@
 (ns circles.core
   (:use quil.core))
 
-; based on the "hello world" for Quil and the bit101 thing
+; "hello world" for Quil meets the bit101 thing
 
 (def the-width 808)
 (def the-height 500)
+
+(def starting-point
+  {:x (int (rand the-width)) :y (int (rand the-height))})
 
 (defn circle [x y]
   (stroke 171 163 225)
@@ -14,14 +17,11 @@
   (let [diam (random 100)]
     (ellipse x y diam diam)))
 
-(defn random-circle []
-  (circle (int (rand the-width)) (int (rand the-height))))
-
 (defn setup []
   (smooth)
   (frame-rate 20)
   (background 0)
-  (random-circle))
+  (circle (starting-point :x) (starting-point :y)))
 
 (defn draw [])
 
