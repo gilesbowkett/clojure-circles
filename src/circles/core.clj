@@ -6,11 +6,6 @@
 (def the-width 808)
 (def the-height 500)
 
-(defn setup []
-  (smooth)
-  (frame-rate 20)
-  (background 0))
-
 (defn circle [x y]
   (stroke 171 163 225)
   (stroke-weight 5)
@@ -22,8 +17,13 @@
 (defn random-circle []
   (circle (int (rand the-width)) (int (rand the-height))))
 
-(defn draw []
+(defn setup []
+  (smooth)
+  (frame-rate 20)
+  (background 0)
   (random-circle))
+
+(defn draw [])
 
 (defsketch example
   :title "Circles"
