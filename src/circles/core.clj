@@ -23,7 +23,7 @@
   (smooth)
   (frame-rate 20)
   (background 0)
-  (circle (random-x-y)))
+  (doall (map circle (list (random-x-y) (random-x-y)))))
 
 (defn draw [])
 
