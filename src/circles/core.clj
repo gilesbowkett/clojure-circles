@@ -9,7 +9,7 @@
 (defn random-x-y []
   (list (int (rand the-width)) (int (rand the-height))))
 
-(def starting-points
+(def circle-positions
   (list (random-x-y) (random-x-y)))
 
 (defn circle [xy]
@@ -29,7 +29,7 @@
   ; so, if you can map drawing across a list of x/y pairs, you can just modify
   ; the x/y pairs on every iteration of the drawing loop, and redraw on every
   ; iteration, and you have moving circles.
-  (doall (map circle starting-points)))
+  (doall (map circle circle-positions)))
 
 (defn draw [])
 
