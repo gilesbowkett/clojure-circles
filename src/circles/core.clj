@@ -8,7 +8,7 @@
 
 (defn circle-as-list []
   ; x y x-velocity y-velocity
-  (list (int (rand the-width)) (int (rand the-height)) 1 1))
+  (list (int (rand the-width)) 1 (int (rand the-height)) 1))
 
 (def circle-positions
   (atom (list (circle-as-list) (circle-as-list))))
@@ -19,18 +19,21 @@
   (fill 213 209 240)
 
   (let [diam 76
-        x (first circle)
-        y (second circle)]
+        x (nth circle 0)
+        y (nth circle 2)]
     (ellipse x y diam diam)))
 
+; function which receives an x and x-vel, and returns same
+; function which receives an y and y-vel, and returns same
+
 (defn move-circle [circle]
-  (let [x (first circle)
-        y (second circle)
-        x-velocity (nth circle 2)
+  (let [x (nth circle 0)
+        x-velocity (nth circle 1)
+        y (nth circle 2)
         y-velocity (nth circle 3)]
     (list (+ x-velocity x)
-          (+ y-velocity y)
           x-velocity
+          (+ y-velocity y)
           y-velocity)))
 
 (defn move-circles [circles]
