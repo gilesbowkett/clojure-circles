@@ -7,7 +7,7 @@
 (def the-height 500)
 
 (defn circle-as-list []
-  (list (int (rand the-width)) (int (rand the-height))))
+  (list (int (rand the-width)) (int (rand the-height)) 1))
 
 (def circle-positions
   (atom (list (circle-as-list) (circle-as-list))))
@@ -22,10 +22,11 @@
         y (second circle)]
     (ellipse x y diam diam)))
 
-(defn move-circle [xy]
-  (let [x (first xy)
-        y (second xy)]
-    (list (+ 1 x) (+ 1 y))))
+(defn move-circle [circle]
+  (let [x (first circle)
+        y (second circle)
+        velocity (nth circle 2)]
+    (list (+ velocity x) (+ velocity y) velocity)))
 
 (defn move-circles [circles]
   (map move-circle circles))
