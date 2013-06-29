@@ -22,7 +22,15 @@
         y (second xy)]
     (ellipse x y diam diam)))
 
+(defn move-circle [xy]
+  (list (+ 1 (first xy)) (+ 1 (second xy))))
+
+(defn move-circles [circles]
+  (map move-circle circles))
+
 (defn draw-circles []
+  (background 0)
+  (swap! circle-positions move-circles)
   (doall (map circle @circle-positions)))
 
 (defn setup []
