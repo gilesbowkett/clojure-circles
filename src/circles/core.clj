@@ -22,21 +22,18 @@
         y (second xy)]
     (ellipse x y diam diam)))
 
+(defn draw-circles []
+  (doall (map circle circle-positions)))
+
 (defn setup []
   (smooth)
   (frame-rate 20)
-  (background 0)
-  ; so, if you can map drawing across a list of x/y pairs, you can just modify
-  ; the x/y pairs on every iteration of the drawing loop, and redraw on every
-  ; iteration, and you have moving circles.
-  (doall (map circle circle-positions)))
-
-(defn draw [])
+  (background 0))
 
 (defsketch example
   :title "Circles"
   :setup setup
-  :draw draw
+  :draw draw-circles
   :size [the-width the-height])
 
 (defn -main [] ())
