@@ -17,7 +17,7 @@
   (stroke-weight 5)
   (fill 213 209 240)
 
-  (let [diam (random 100)
+  (let [diam 76
         x (first xy)
         y (second xy)]
     (ellipse x y diam diam)))
