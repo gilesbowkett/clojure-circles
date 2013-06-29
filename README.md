@@ -1,13 +1,15 @@
 # circles
 
-A Clojure library designed to ... well, that part is up to you.
+bit101 style
 
-## Usage
+# cool idea
 
-FIXME
+have the circles periodically wink out of existence, in sync with the music
+changing
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Giles Bowkett
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the MIT License
+
