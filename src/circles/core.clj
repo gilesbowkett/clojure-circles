@@ -6,11 +6,14 @@
 (def the-width 808)
 (def the-height 500)
 
-(defn random-x-y []
+; to get any further, you need circles to have a concept of velocity. you might as well
+; just make these fuckers objects at this point. probably via defrecord.
+
+(defn circle-as-list []
   (list (int (rand the-width)) (int (rand the-height))))
 
 (def circle-positions
-  (atom (list (random-x-y) (random-x-y))))
+  (atom (list (circle-as-list) (circle-as-list))))
 
 (defn circle [xy]
   (stroke 171 163 225)
