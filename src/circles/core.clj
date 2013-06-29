@@ -10,7 +10,7 @@
   (list (int (rand the-width)) (int (rand the-height))))
 
 (def circle-positions
-  (list (random-x-y) (random-x-y)))
+  (atom (list (random-x-y) (random-x-y))))
 
 (defn circle [xy]
   (stroke 171 163 225)
@@ -23,7 +23,7 @@
     (ellipse x y diam diam)))
 
 (defn draw-circles []
-  (doall (map circle circle-positions)))
+  (doall (map circle @circle-positions)))
 
 (defn setup []
   (smooth)
