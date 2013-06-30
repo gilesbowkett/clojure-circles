@@ -6,7 +6,11 @@
 (def the-width 808)
 (def the-height 500)
 (def the-distance-threshold 200)
+
 (def one-cos-memo (atom 1))
+(defn one-cos-sq [number]
+  (/ 1 (Math/pow (Math/cos number) 2)))
+
 
 (defn circle-as-list []
   ; x y x-velocity y-velocity
@@ -14,7 +18,6 @@
 
 (def circle-positions
   (atom (list (circle-as-list) (circle-as-list) (circle-as-list)
-              (circle-as-list) (circle-as-list) (circle-as-list)
               (circle-as-list) (circle-as-list) (circle-as-list)
               (circle-as-list) (circle-as-list) (circle-as-list)
               (circle-as-list) (circle-as-list))))
@@ -91,24 +94,35 @@
 (defn draw-lines [bubbles]
   (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
 
-(defn one-cos-sq [number]
-  (/ 1 (Math/pow (Math/cos number) 2)))
+(def stroke-red   (atom '(171 1)))
+(def stroke-blue  (atom '(163 2)))
+(def stroke-green (atom '(225 3)))
 
-(defn set-colors []
-  ; "I could give it to you but what you gonna do with it?" this code
-  ; successfully runs the 1/cos(x2) function Dave mentioned, but how do I
-  ; convert that into stroke width and colors? normalize?
+(defn cycle-color [hue-and-velocity]
+  (let [hue (first hue-and-velocity)
+        velocity (second hue-and-velocity)]
+    (if (or (>= hue 255) (<= hue 0))
+        (list (+ hue (* -1 velocity)) (* -1 velocity))
+        (list (+ hue velocity) velocity))))
+
+(defn set-line-characteristics []
+
   (swap! one-cos-memo one-cos-sq)
-  (println @one-cos-memo)
-  (stroke 171 163 225)
-  (stroke-weight 1)
-  (fill 13 9 40))
+  (stroke-weight (int @one-cos-memo))
+
+  (swap! stroke-red cycle-color)
+  (swap! stroke-blue cycle-color)
+  (swap! stroke-green cycle-color)
+  (stroke (first @stroke-red)
+          (first @stroke-blue)
+          (first @stroke-green))
+
+  (fill 0 0 0))
 
 (defn draw-circles []
   (background 0)
-  (set-colors)
+  (set-line-characteristics)
   (swap! circle-positions move-circles)
-  ; this triggers OutOfMemory errors for reasons I do not know at all
   (draw-lines @circle-positions)
   (doall (map draw-circle @circle-positions)))
 
