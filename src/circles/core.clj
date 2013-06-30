@@ -11,37 +11,21 @@
   (list (int (rand the-width)) 5 (int (rand the-height)) 5))
 
 (def circle-positions
-  (atom (list (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list)
-              (circle-as-list))))
+  (atom (list (circle-as-list) (circle-as-list) (circle-as-list)
+              (circle-as-list) (circle-as-list) (circle-as-list)
+              (circle-as-list) (circle-as-list) (circle-as-list)
+              (circle-as-list) (circle-as-list) (circle-as-list)
+              (circle-as-list) (circle-as-list) (circle-as-list)
+              (circle-as-list) (circle-as-list) (circle-as-list)
+              (circle-as-list) (circle-as-list) (circle-as-list)
+              (circle-as-list) (circle-as-list))))
 
 (defn draw-circle [circle]
   (stroke 171 163 225)
-  (stroke-weight 5)
-  (fill 213 209 240)
+  (stroke-weight 1)
+  (fill 13 9 40)
 
-  (let [diam 3
+  (let [diam 8
         x (nth circle 0)
         y (nth circle 2)]
     (ellipse x y diam diam)))
@@ -75,9 +59,40 @@
 (defn move-circles [circles]
   (map move-circle circles))
 
+; worked, but non-idiomatic
+; (defn bubble-coordinates [list-a list-b]
+;   (loop [result ()
+;          list-a list-a
+;          list-b list-b]
+;     (if (empty? list-a)
+;         result
+;         (recur (concat result (map (fn [bubble]
+;                                      (list (first list-a) bubble))
+;                                    list-b)
+;                               result) (rest list-a) list-b))))
+
+; idiomatic version, using sequence comprehensions
+; https://gist.github.com/gilesbowkett/5893860
+(defn bubble-coordinates [seq-1 seq-2]
+  (for [elem-1 seq-1 elem-2 seq-2] [elem-1 elem-2]))
+
+(defn draw-line [pair]
+  (println pair)
+  (let [circle-a (first pair)
+        circle-b (second pair)]
+    (line (nth circle-a 0)
+          (nth circle-a 2)
+          (nth circle-b 0)
+          (nth circle-b 2))))
+
+(defn draw-lines [bubbles]
+  (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
+
 (defn draw-circles []
   (background 0)
   (swap! circle-positions move-circles)
+  ; this triggers OutOfMemory errors for reasons I do not know at all
+  (draw-lines @circle-positions)
   (doall (map draw-circle @circle-positions)))
 
 (defn setup []
