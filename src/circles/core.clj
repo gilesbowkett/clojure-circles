@@ -6,6 +6,7 @@
 (def the-width 808)
 (def the-height 500)
 (def the-distance-threshold 200)
+(def one-cos-memo (atom 1))
 
 (defn circle-as-list []
   ; x y x-velocity y-velocity
@@ -19,10 +20,6 @@
               (circle-as-list) (circle-as-list))))
 
 (defn draw-circle [circle]
-  (stroke 171 163 225)
-  (stroke-weight 1)
-  (fill 13 9 40)
-
   (let [diam 8
         x (nth circle 0)
         y (nth circle 2)]
@@ -94,8 +91,22 @@
 (defn draw-lines [bubbles]
   (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
 
+(defn one-cos-sq [number]
+  (/ 1 (Math/pow (Math/cos number) 2)))
+
+(defn set-colors []
+  ; "I could give it to you but what you gonna do with it?" this code
+  ; successfully runs the 1/cos(x2) function Dave mentioned, but how do I
+  ; convert that into stroke width and colors? normalize?
+  (swap! one-cos-memo one-cos-sq)
+  (println @one-cos-memo)
+  (stroke 171 163 225)
+  (stroke-weight 1)
+  (fill 13 9 40))
+
 (defn draw-circles []
   (background 0)
+  (set-colors)
   (swap! circle-positions move-circles)
   ; this triggers OutOfMemory errors for reasons I do not know at all
   (draw-lines @circle-positions)
