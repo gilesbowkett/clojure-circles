@@ -26,15 +26,31 @@
 ; function which receives an x and x-vel, and returns same
 ; function which receives an y and y-vel, and returns same
 
+(defn move-x [x x-velocity]
+  (if (or (>= (+ x x-velocity) the-width)
+          (<= (+ x x-velocity) 0))
+      (list x (* -1 x-velocity))
+      (list (+ x-velocity x) x-velocity)))
+
+(defn move-y [y y-velocity]
+  (if (or (>= (+ y y-velocity) the-height)
+          (<= (+ y y-velocity) 0))
+      (list y (* -1 y-velocity))
+      (list (+ y-velocity y) y-velocity)))
+
 (defn move-circle [circle]
   (let [x (nth circle 0)
         x-velocity (nth circle 1)
         y (nth circle 2)
-        y-velocity (nth circle 3)]
-    (list (+ x-velocity x)
-          x-velocity
-          (+ y-velocity y)
-          y-velocity)))
+        y-velocity (nth circle 3)
+
+        new-x-vel (move-x x x-velocity)
+        new-y-vel (move-y y y-velocity)]
+
+    (list (first new-x-vel)
+          (second new-x-vel)
+          (first new-y-vel)
+          (second new-y-vel))))
 
 (defn move-circles [circles]
   (map move-circle circles))
