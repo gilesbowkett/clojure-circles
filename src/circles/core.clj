@@ -5,6 +5,7 @@
 
 (def the-width 808)
 (def the-height 500)
+(def the-distance-threshold 200)
 
 (defn circle-as-list []
   ; x y x-velocity y-velocity
@@ -12,9 +13,6 @@
 
 (def circle-positions
   (atom (list (circle-as-list) (circle-as-list) (circle-as-list)
-              (circle-as-list) (circle-as-list) (circle-as-list)
-              (circle-as-list) (circle-as-list) (circle-as-list)
-              (circle-as-list) (circle-as-list) (circle-as-list)
               (circle-as-list) (circle-as-list) (circle-as-list)
               (circle-as-list) (circle-as-list) (circle-as-list)
               (circle-as-list) (circle-as-list) (circle-as-list)
@@ -76,14 +74,22 @@
 (defn bubble-coordinates [seq-1 seq-2]
   (for [elem-1 seq-1 elem-2 seq-2] [elem-1 elem-2]))
 
+(defn distance-within-threshold [x-1 y-1 x-2 y-2]
+  (> the-distance-threshold
+     (Math/sqrt (+ (Math/pow (- x-1 x-2) 2)
+                   (Math/pow (- y-1 y-2) 2)))))
+
 (defn draw-line [pair]
-  (println pair)
   (let [circle-a (first pair)
         circle-b (second pair)]
-    (line (nth circle-a 0)
-          (nth circle-a 2)
-          (nth circle-b 0)
-          (nth circle-b 2))))
+    (if (distance-within-threshold (nth circle-a 0)
+                                   (nth circle-a 2)
+                                   (nth circle-b 0)
+                                   (nth circle-b 2))
+      (line (nth circle-a 0)
+            (nth circle-a 2)
+            (nth circle-b 0)
+            (nth circle-b 2)))))
 
 (defn draw-lines [bubbles]
   (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
