@@ -5,12 +5,11 @@
 
 (def the-width 808)
 (def the-height 500)
-(def the-distance-threshold 200)
+(def the-distance-threshold 150)
 
 (def one-cos-memo (atom 1))
 (defn one-cos-sq [number]
   (/ 1 (Math/pow (Math/cos number) 2)))
-
 
 (defn circle-as-list []
   ; x y x-velocity y-velocity
@@ -23,7 +22,7 @@
               (circle-as-list) (circle-as-list))))
 
 (defn draw-circle [circle]
-  (let [diam 8
+  (let [diam 20
         x (nth circle 0)
         y (nth circle 2)]
     (ellipse x y diam diam)))
@@ -82,14 +81,14 @@
 (defn draw-line [pair]
   (let [circle-a (first pair)
         circle-b (second pair)]
-    (if (distance-within-threshold (nth circle-a 0)
-                                   (nth circle-a 2)
-                                   (nth circle-b 0)
-                                   (nth circle-b 2))
-      (line (nth circle-a 0)
-            (nth circle-a 2)
-            (nth circle-b 0)
-            (nth circle-b 2)))))
+    (if (distance-within-threshold (nth circle-a 0)   ; x1
+                                   (nth circle-a 2)   ; y1
+                                   (nth circle-b 0)   ; x2
+                                   (nth circle-b 2))  ; y2
+      (line (nth circle-a 0)     ; x1
+            (nth circle-a 2)     ; y1
+            (nth circle-b 0)     ; x2
+            (nth circle-b 2))))) ; y2
 
 (defn draw-lines [bubbles]
   (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
@@ -106,12 +105,13 @@
         (list (+ hue (* -1 velocity)) (* -1 velocity))
         (list (+ hue velocity) velocity))))
 
+(def stroke-modulation-rate-throttle (atom 0))
+
 (defn set-line-characteristics []
 
-  (swap! one-cos-memo one-cos-sq)
-  ; todo: set this up with a concept of velocity as well, so you can decouple
-  ; frame rate from stroke width modulation
-  (stroke-weight (int @one-cos-memo))
+  (swap! stroke-modulation-rate-throttle inc)
+  (if (= 0 (rem @stroke-modulation-rate-throttle 14))
+     (stroke-weight (int (swap! one-cos-memo one-cos-sq))))
 
   (swap! stroke-red cycle-color)
   (swap! stroke-blue cycle-color)
@@ -131,8 +131,7 @@
 
 (defn setup []
   (smooth)
-  (frame-rate 35)
-  (background 0))
+  (frame-rate 35))
 
 (defsketch example
   :title "Circles"
