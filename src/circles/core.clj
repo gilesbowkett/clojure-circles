@@ -94,9 +94,10 @@
 (defn draw-lines [bubbles]
   (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
 
-(def stroke-red   (atom '(171 1)))
-(def stroke-blue  (atom '(163 2)))
-(def stroke-green (atom '(225 3)))
+;                         hue velocity
+(def stroke-red   (atom '(171 3)))
+(def stroke-blue  (atom '(163 3)))
+(def stroke-green (atom '(225 7)))
 
 (defn cycle-color [hue-and-velocity]
   (let [hue (first hue-and-velocity)
@@ -108,6 +109,8 @@
 (defn set-line-characteristics []
 
   (swap! one-cos-memo one-cos-sq)
+  ; todo: set this up with a concept of velocity as well, so you can decouple
+  ; frame rate from stroke width modulation
   (stroke-weight (int @one-cos-memo))
 
   (swap! stroke-red cycle-color)
@@ -117,10 +120,10 @@
           (first @stroke-blue)
           (first @stroke-green))
 
-  (fill 0 0 0))
+  (fill 255 255 255))
 
-(defn draw-circles []
-  (background 0)
+(defn draw []
+  (background 255 255 255)
   (set-line-characteristics)
   (swap! circle-positions move-circles)
   (draw-lines @circle-positions)
@@ -128,13 +131,13 @@
 
 (defn setup []
   (smooth)
-  (frame-rate 20)
+  (frame-rate 35)
   (background 0))
 
 (defsketch example
   :title "Circles"
   :setup setup
-  :draw draw-circles
+  :draw draw
   :size [the-width the-height])
 
 (defn -main [] ())
