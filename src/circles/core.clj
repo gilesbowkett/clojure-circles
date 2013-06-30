@@ -24,6 +24,15 @@
               (circle-as-list)
               (circle-as-list)
               (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
               (circle-as-list))))
 
 (defn draw-circle [circle]
@@ -35,9 +44,6 @@
         x (nth circle 0)
         y (nth circle 2)]
     (ellipse x y diam diam)))
-
-; function which receives an x and x-vel, and returns same
-; function which receives an y and y-vel, and returns same
 
 (defn move-x [x x-velocity]
   (if (or (>= (+ x x-velocity) the-width)
