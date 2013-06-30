@@ -8,17 +8,30 @@
 
 (defn circle-as-list []
   ; x y x-velocity y-velocity
-  (list (int (rand the-width)) 1 (int (rand the-height)) 1))
+  (list (int (rand the-width)) 5 (int (rand the-height)) 5))
 
 (def circle-positions
-  (atom (list (circle-as-list) (circle-as-list))))
+  (atom (list (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list)
+              (circle-as-list))))
 
 (defn draw-circle [circle]
   (stroke 171 163 225)
   (stroke-weight 5)
   (fill 213 209 240)
 
-  (let [diam 76
+  (let [diam 3
         x (nth circle 0)
         y (nth circle 2)]
     (ellipse x y diam diam)))
