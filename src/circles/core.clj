@@ -33,6 +33,7 @@
               (circle-as-list)
               (circle-as-list)
               (circle-as-list)
+              (circle-as-list)
               (circle-as-list))))
 
 (defn draw-circle [circle]
