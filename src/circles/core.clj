@@ -57,7 +57,7 @@
 (defn move-circles [circles]
   (map move-circle circles))
 
-; worked, but non-idiomatic
+; worked, but non-idiomatic, and memory problems
 ; (defn bubble-coordinates [list-a list-b]
 ;   (loop [result ()
 ;          list-a list-a
