@@ -53,7 +53,10 @@
             (second new-x-vel)
             (first new-y-vel)
             (second new-y-vel))
-      (list (int (rand the-width)) (int (rand 7)) (int (rand the-height)) (int (rand 11))))))
+      (list (int (rand the-width))
+            (int (rand 7))
+            (int (rand the-height))
+            (int (rand 11))))))
 
 (defn move-circles [circles]
   (map move-circle circles))
