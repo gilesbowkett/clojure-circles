@@ -127,8 +127,8 @@
 (defn draw []
   (if (= 0 (rem @stroke-modulation-rate-throttle 100))
     (if (> 0.9 (rand))
-      (background 255 255 255)
-      (background 0 0 0)))
+      (background 255)
+      (background 0)))
   (set-line-characteristics)
   (swap! circle-positions move-circles)
   (draw-lines @circle-positions)
