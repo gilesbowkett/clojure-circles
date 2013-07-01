@@ -100,7 +100,7 @@
 
 ;                         hue velocity
 (def stroke-red   (atom '(171 3)))
-(def stroke-blue  (atom '(163 3)))
+(def stroke-blue  (atom '(163 23)))
 (def stroke-green (atom '(225 7)))
 
 (defn cycle-color [hue-and-velocity]
