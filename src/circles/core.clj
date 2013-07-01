@@ -1,7 +1,7 @@
 (ns circles.core
   (:use quil.core))
 
-; "hello world" for Quil meets the bit101 thing
+; Quil (Processing)
 
 (def the-width 808)
 (def the-height 500)
@@ -138,11 +138,13 @@
   (smooth)
   (frame-rate 35))
 
-(defsketch example
+(defsketch circles
   :title "Circles"
   :setup setup
   :draw draw
   :size [the-width the-height])
+
+; leiningen boilerplate
 
 (defn -main [] ())
 
