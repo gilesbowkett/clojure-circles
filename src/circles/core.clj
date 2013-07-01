@@ -48,10 +48,12 @@
         new-x-vel (move-x x x-velocity)
         new-y-vel (move-y y y-velocity)]
 
-    (list (first new-x-vel)
-          (second new-x-vel)
-          (first new-y-vel)
-          (second new-y-vel))))
+    (if (> 0.99 (rand))
+      (list (first new-x-vel)
+            (second new-x-vel)
+            (first new-y-vel)
+            (second new-y-vel))
+      (list (int (rand the-width)) (int (rand 7)) (int (rand the-height)) (int (rand 11))))))
 
 (defn move-circles [circles]
   (map move-circle circles))
@@ -123,7 +125,10 @@
   (fill 255 255 255))
 
 (defn draw []
-  (background 255 255 255)
+  (if (= 0 (rem @stroke-modulation-rate-throttle 100))
+    (if (> 0.9 (rand))
+      (background 255 255 255)
+      (background 0 0 0)))
   (set-line-characteristics)
   (swap! circle-positions move-circles)
   (draw-lines @circle-positions)
