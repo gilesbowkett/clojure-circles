@@ -12,10 +12,17 @@
 (def stroke-red   (atom '(171 3)))
 (def stroke-blue  (atom '(163 23)))
 (def stroke-green (atom '(225 7)))
+(def stroke-weight (atom 1))
+(def reset-background (atom false))
 
-(defn mutate-colors-from-finger [finger] ; fixme: terrible naming
-;  (swap! stroke-red (fn [blarg] (list (int (* 1.9 finger)) 0)))
-  (swap! stroke-blue (fn [blarg] (list (int (* 1.9 finger)) 0)))
+; fixme: macro?
+(defn mutate-red-from-finger [finger] ; fixme: terrible naming
+  (swap! stroke-red (fn [blarg] (list (int (* 1.9 finger)) 0))))
+
+(defn mutate-blue-from-finger [finger] ; fixme: terrible naming
+  (swap! stroke-blue (fn [blarg] (list (int (* 1.9 finger)) 0))))
+
+(defn mutate-green-from-finger [finger] ; fixme: terrible naming
   (swap! stroke-green (fn [blarg] (list (int (* 1.9 finger)) 0))))
 
 (o/on-event [:midi :control-change]
@@ -23,7 +30,11 @@
         (println note data velocity) ; this use of velocity makes no sense to me at all btw
         (case note
           7  (swap! diameter (fn [blarg] (* 3 velocity)))
-          10 (mutate-colors-from-finger velocity))
+          16 (mutate-red-from-finger velocity)
+          17 (mutate-blue-from-finger velocity)
+          18 (mutate-green-from-finger velocity)
+          19 (swap! stroke-weight (fn [blarg] velocity))
+          90 (swap! reset-background (fn [reset-bkg] (not reset-bkg))))
   ) ::note-printer)
 
 ; Quil (Processing)
@@ -119,9 +130,10 @@
 
 (defn set-line-characteristics []
 
-  (swap! stroke-modulation-rate-throttle inc)
-  (if (= 0 (rem @stroke-modulation-rate-throttle 14))
-     (q/stroke-weight (int (swap! one-cos-memo one-cos-sq))))
+  ; (swap! stroke-modulation-rate-throttle inc)
+  ; (if (= 0 (rem @stroke-modulation-rate-throttle 14))
+  ;    (q/stroke-weight (int (swap! one-cos-memo one-cos-sq))))
+  (q/stroke-weight @stroke-weight)
 
   (comment (
   (swap! stroke-red cycle-color)
@@ -135,14 +147,16 @@
   (q/fill 255 255 255))
 
 (defn draw []
-  (if (= 0 (rem @stroke-modulation-rate-throttle 300))
-    (if (> 0.9 (rand))
-      (q/background 255)
-      (q/background 0)))
+  ; (if (= 0 (rem @stroke-modulation-rate-throttle 300))
+  ;   (if (> 0.9 (rand))
+  ;     (q/background 255)
+  ;     (q/background 0)))
+  (if @reset-background (q/background 0))
   (set-line-characteristics)
   (swap! circle-positions move-circles)
   (draw-lines @circle-positions)
-  (doall (map draw-circle @circle-positions)))
+  ; (doall (map draw-circle @circle-positions))
+)
 
 (defn setup []
   (q/smooth)
