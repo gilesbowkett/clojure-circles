@@ -4,9 +4,12 @@
 
 ; Overtone
 
+(def diameter (atom 10))
+
 (o/on-event [:midi :control-change]
   (fn [{note :note data :data1 velocity :velocity}]
-        (println note data velocity)) ::note-printer)
+        (println velocity) ; this use of velocity makes no sense to me at all btw
+        (swap! diameter (fn [blarg] (* 3 velocity)))) ::note-printer)
 
 ; Quil (Processing)
 
@@ -29,10 +32,9 @@
               (circle-as-list) (circle-as-list))))
 
 (defn draw-circle [circle]
-  (let [diam 20
-        x (nth circle 0)
+  (let [x (nth circle 0)
         y (nth circle 2)]
-    (q/ellipse x y diam diam)))
+    (q/ellipse x y @diameter @diameter)))
 
 (defn move-x [x x-velocity]
   (if (or (>= (+ x x-velocity) the-width)
