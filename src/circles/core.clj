@@ -2,14 +2,29 @@
   (:require [quil.core :as q])
   (:require [overtone.live :as o]))
 
+; 16, 17, 18: red, green, blue
+
 ; Overtone
 
 (def diameter (atom 10))
 
+;                         hue velocity
+(def stroke-red   (atom '(171 3)))
+(def stroke-blue  (atom '(163 23)))
+(def stroke-green (atom '(225 7)))
+
+(defn mutate-colors-from-finger [finger] ; fixme: terrible naming
+;  (swap! stroke-red (fn [blarg] (list (int (* 1.9 finger)) 0)))
+  (swap! stroke-blue (fn [blarg] (list (int (* 1.9 finger)) 0)))
+  (swap! stroke-green (fn [blarg] (list (int (* 1.9 finger)) 0))))
+
 (o/on-event [:midi :control-change]
   (fn [{note :note data :data1 velocity :velocity}]
-        (println velocity) ; this use of velocity makes no sense to me at all btw
-        (swap! diameter (fn [blarg] (* 3 velocity)))) ::note-printer)
+        (println note data velocity) ; this use of velocity makes no sense to me at all btw
+        (case note
+          7  (swap! diameter (fn [blarg] (* 3 velocity)))
+          10 (mutate-colors-from-finger velocity))
+  ) ::note-printer)
 
 ; Quil (Processing)
 
@@ -93,11 +108,6 @@
 (defn draw-lines [bubbles]
   (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
 
-;                         hue velocity
-(def stroke-red   (atom '(171 3)))
-(def stroke-blue  (atom '(163 23)))
-(def stroke-green (atom '(225 7)))
-
 (defn cycle-color [hue-and-velocity]
   (let [hue (first hue-and-velocity)
         velocity (second hue-and-velocity)]
@@ -113,9 +123,11 @@
   (if (= 0 (rem @stroke-modulation-rate-throttle 14))
      (q/stroke-weight (int (swap! one-cos-memo one-cos-sq))))
 
+  (comment (
   (swap! stroke-red cycle-color)
   (swap! stroke-blue cycle-color)
   (swap! stroke-green cycle-color)
+  ))
   (q/stroke (first @stroke-red)
             (first @stroke-blue)
             (first @stroke-green))
@@ -123,7 +135,7 @@
   (q/fill 255 255 255))
 
 (defn draw []
-  (if (= 0 (rem @stroke-modulation-rate-throttle 100))
+  (if (= 0 (rem @stroke-modulation-rate-throttle 300))
     (if (> 0.9 (rand))
       (q/background 255)
       (q/background 0)))
