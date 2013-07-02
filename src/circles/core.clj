@@ -1,5 +1,12 @@
 (ns circles.core
-  (:use quil.core))
+  (:require [quil.core :as q])
+  (:require [overtone.live :as o]))
+
+; Overtone
+
+(o/on-event [:midi :control-change]
+  (fn [{note :note data :data1 velocity :velocity}]
+        (println note data velocity)) ::note-printer)
 
 ; Quil (Processing)
 
@@ -25,7 +32,7 @@
   (let [diam 20
         x (nth circle 0)
         y (nth circle 2)]
-    (ellipse x y diam diam)))
+    (q/ellipse x y diam diam)))
 
 (defn move-x [x x-velocity]
   (if (or (>= (+ x x-velocity) the-width)
@@ -61,20 +68,6 @@
 (defn move-circles [circles]
   (map move-circle circles))
 
-; worked, but non-idiomatic, and memory problems
-; (defn bubble-coordinates [list-a list-b]
-;   (loop [result ()
-;          list-a list-a
-;          list-b list-b]
-;     (if (empty? list-a)
-;         result
-;         (recur (concat result (map (fn [bubble]
-;                                      (list (first list-a) bubble))
-;                                    list-b)
-;                               result) (rest list-a) list-b))))
-
-; idiomatic version, using sequence comprehensions
-; https://gist.github.com/gilesbowkett/5893860
 (defn bubble-coordinates [seq-1 seq-2]
   (for [elem-1 seq-1 elem-2 seq-2] [elem-1 elem-2]))
 
@@ -90,10 +83,10 @@
                                    (nth circle-a 2)   ; y1
                                    (nth circle-b 0)   ; x2
                                    (nth circle-b 2))  ; y2
-      (line (nth circle-a 0)     ; x1
-            (nth circle-a 2)     ; y1
-            (nth circle-b 0)     ; x2
-            (nth circle-b 2))))) ; y2
+      (q/line (nth circle-a 0)     ; x1
+              (nth circle-a 2)     ; y1
+              (nth circle-b 0)     ; x2
+              (nth circle-b 2))))) ; y2
 
 (defn draw-lines [bubbles]
   (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
@@ -116,32 +109,32 @@
 
   (swap! stroke-modulation-rate-throttle inc)
   (if (= 0 (rem @stroke-modulation-rate-throttle 14))
-     (stroke-weight (int (swap! one-cos-memo one-cos-sq))))
+     (q/stroke-weight (int (swap! one-cos-memo one-cos-sq))))
 
   (swap! stroke-red cycle-color)
   (swap! stroke-blue cycle-color)
   (swap! stroke-green cycle-color)
-  (stroke (first @stroke-red)
-          (first @stroke-blue)
-          (first @stroke-green))
+  (q/stroke (first @stroke-red)
+            (first @stroke-blue)
+            (first @stroke-green))
 
-  (fill 255 255 255))
+  (q/fill 255 255 255))
 
 (defn draw []
   (if (= 0 (rem @stroke-modulation-rate-throttle 100))
     (if (> 0.9 (rand))
-      (background 255)
-      (background 0)))
+      (q/background 255)
+      (q/background 0)))
   (set-line-characteristics)
   (swap! circle-positions move-circles)
   (draw-lines @circle-positions)
   (doall (map draw-circle @circle-positions)))
 
 (defn setup []
-  (smooth)
-  (frame-rate 35))
+  (q/smooth)
+  (q/frame-rate 35))
 
-(defsketch circles
+(q/defsketch circles
   :title "Circles"
   :setup setup
   :draw draw
