@@ -2,10 +2,14 @@
 
 bit101 style
 
-# cool idea
+# `master` branch
 
-have the circles periodically wink out of existence, in sync with the music
-changing
+a screensaver-like generative visual art piece.
+
+# `arturia-control` branch
+
+an art toy which allows you to tweak, with an Arturia Spark LE drum machine, the
+characteristics of an automatic drawing / animation system.
 
 ## License
 
