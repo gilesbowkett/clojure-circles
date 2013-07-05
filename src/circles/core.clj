@@ -8,16 +8,15 @@
 
 (def diameter (atom 10))
 
-;                         hue velocity
-(def stroke-red   (atom '(171 3)))
-(def stroke-blue  (atom '(163 23)))
-(def stroke-green (atom '(225 7)))
-(def stroke-weight (atom 1))
-(def reset-background (atom false))
-(def the-distance-threshold (atom 150))
-(def draw-circles? (atom false))
-(def draw-lines? (atom false))
-(def cycle-colors? (atom false))
+(def stroke-red               (atom '(171 3)))
+(def stroke-blue              (atom '(163 23)))
+(def stroke-green             (atom '(225 7)))
+(def stroke-weight            (atom 1))
+(def reset-background         (atom false))
+(def the-distance-threshold   (atom 150))
+(def draw-circles?            (atom false))
+(def draw-lines?              (atom false))
+(def cycle-colors?            (atom false))
 
 ; fixme: macro?
 (defn mutate-red-from-finger [finger] ; fixme: terrible naming
