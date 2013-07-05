@@ -17,29 +17,31 @@
 (def the-distance-threshold (atom 150))
 (def draw-circles? (atom false))
 (def draw-lines? (atom false))
+(def cycle-colors? (atom false))
 
 ; fixme: macro?
 (defn mutate-red-from-finger [finger] ; fixme: terrible naming
-  (swap! stroke-red (fn [blarg] (list (int (* 1.9 finger)) 0))))
+  (swap! stroke-red (fn [blarg] (list (int (* 1.9 finger)) 3))))
 
 (defn mutate-blue-from-finger [finger] ; fixme: terrible naming
-  (swap! stroke-blue (fn [blarg] (list (int (* 1.9 finger)) 0))))
+  (swap! stroke-blue (fn [blarg] (list (int (* 1.9 finger)) 23))))
 
 (defn mutate-green-from-finger [finger] ; fixme: terrible naming
-  (swap! stroke-green (fn [blarg] (list (int (* 1.9 finger)) 0))))
+  (swap! stroke-green (fn [blarg] (list (int (* 1.9 finger)) 7))))
 
 (o/on-event [:midi :control-change]
   (fn [{note :note data :data1 velocity :velocity}]
         (println note data velocity) ; this use of velocity makes no sense to me at all btw
         (case note
-          7  (swap! diameter (fn [blarg] (* 3 velocity)))
+           7 (swap! diameter (fn [blarg] (* 3 velocity)))
           10 (swap! the-distance-threshold (fn [blarg] (* 2 (+ velocity (int (rand 25))))))
           16 (mutate-red-from-finger velocity)
           17 (mutate-blue-from-finger velocity)
           18 (mutate-green-from-finger velocity)
           19 (swap! stroke-weight (fn [blarg] velocity))
-          26 (swap! draw-circles? (fn [d-c] (not d-c)))
-         121 (swap! draw-lines? (fn [d-l] (not d-l)))
+          76 (swap! draw-circles? (fn [d-c] (not d-c)))
+          77 (swap! draw-lines? (fn [d-l] (not d-l)))
+          78 (swap! cycle-colors? (fn [c-c] (not c-c)))
           90 (swap! reset-background (fn [reset-bkg] (not reset-bkg))))
   ) ::note-printer)
 
@@ -140,11 +142,10 @@
   ;    (q/stroke-weight (int (swap! one-cos-memo one-cos-sq))))
   (q/stroke-weight @stroke-weight)
 
-  (comment (
-  (swap! stroke-red cycle-color)
-  (swap! stroke-blue cycle-color)
-  (swap! stroke-green cycle-color)
-  ))
+  (if @cycle-colors?
+  (do (swap! stroke-red cycle-color)
+      (swap! stroke-blue cycle-color)
+      (swap! stroke-green cycle-color)))
   (q/stroke (first @stroke-red)
             (first @stroke-blue)
             (first @stroke-green))
