@@ -150,7 +150,7 @@
             (first @stroke-blue)
             (first @stroke-green))
 
-  (q/fill 255 255 255))
+  (q/fill 0))
 
 (defn draw []
   ; (if (= 0 (rem @stroke-modulation-rate-throttle 300))
