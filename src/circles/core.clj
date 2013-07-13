@@ -69,6 +69,7 @@
 
              ; pushing big selection knob as button toggles background modes
           90 (swap! reset-background (fn [reset-bkg] (not reset-bkg))))
+
   ) ::note-printer)
 
 ; global vars for drawing stuff
