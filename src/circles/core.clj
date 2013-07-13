@@ -36,6 +36,7 @@
 (o/on-event [:midi :control-change]
   (fn [{note :note data :data1 velocity :velocity}]
         (println note data velocity) ; this use of velocity makes no sense to me at all btw
+                                     ; but that's more about arturia and/or midi than clojure
         (case note
           ; controller numbers link up to changes the controllers cause
 
@@ -78,23 +79,24 @@
 ; and velocities also for x and y. you need velocities to track
 ; which direction it's going, so you can make it bounce when
 ; it hits an edge.
-(defn circle-as-list []
+(defn circle-as-map []
   ; x y x-velocity y-velocity
-  (list (int (rand the-width)) 5 (int (rand the-height)) 5))
+  {:x (int (rand the-width)), :x-velocity 5, :y (int (rand the-height)), :y-velocity 5})
 
 ; start things off with a bunch of random circles
 (def circle-positions
-  (atom (list (circle-as-list) (circle-as-list) (circle-as-list)
-              (circle-as-list) (circle-as-list) (circle-as-list)
-              (circle-as-list) (circle-as-list) (circle-as-list)
-              (circle-as-list) (circle-as-list))))
+  (atom (list (circle-as-map) (circle-as-map) (circle-as-map)
+              (circle-as-map) (circle-as-map) (circle-as-map)
+              (circle-as-map) (circle-as-map) (circle-as-map)
+              (circle-as-map) (circle-as-map))))
 
 ; draw a circle
 (defn draw-circle [circle]
-  (let [x (nth circle 0)
-        y (nth circle 2)]
+  (let [x (circle :x)
+        y (circle :y)]
     (q/ellipse x y @diameter @diameter)))
 
+; FIXME: dry. macros?
 ; move a circle in the x dimension (horizontal)
 (defn move-x [x x-velocity]
   (if (or (>= (+ x x-velocity) the-width)
@@ -111,24 +113,24 @@
 
 ; move a circle
 (defn move-circle [circle]
-  (let [x (nth circle 0)
-        x-velocity (nth circle 1)
-        y (nth circle 2)
-        y-velocity (nth circle 3)
+  (let [x (circle :x)
+        x-velocity (circle :x-velocity)
+        y (circle :y)
+        y-velocity (circle :y-velocity)
 
         new-x-vel (move-x x x-velocity)
         new-y-vel (move-y y y-velocity)]
 
     ; move 99% of circles; teleport 1%
     (if (> 0.99 (rand))
-      (list (first new-x-vel)
-            (second new-x-vel)
-            (first new-y-vel)
-            (second new-y-vel))
-      (list (int (rand the-width))
-            (int (rand 7))
-            (int (rand the-height))
-            (int (rand 11))))))
+      {:x (first new-x-vel),
+       :x-velocity (second new-x-vel),
+       :y (first new-y-vel),
+       :y-velocity (second new-y-vel)}
+      {:x (int (rand the-width)),
+       :x-velocity (int (rand 7)),
+       :y (int (rand the-height)),
+       :y-velocity (int (rand 11))})))
 
 ; move all the circles
 (defn move-circles [circles]
@@ -149,14 +151,14 @@
 (defn draw-line [pair]
   (let [circle-a (first pair)
         circle-b (second pair)]
-    (if (distance-within-threshold (nth circle-a 0)   ; x1
-                                   (nth circle-a 2)   ; y1
-                                   (nth circle-b 0)   ; x2
-                                   (nth circle-b 2))  ; y2
-      (q/line (nth circle-a 0)     ; x1
-              (nth circle-a 2)     ; y1
-              (nth circle-b 0)     ; x2
-              (nth circle-b 2))))) ; y2
+    (if (distance-within-threshold (circle-a :x)
+                                   (circle-a :y)
+                                   (circle-b :x)
+                                   (circle-b :y))
+      (q/line (circle-a :x)
+              (circle-a :y)
+              (circle-b :x)
+              (circle-b :y)))))
 
 ; draw all the lines
 (defn draw-lines [bubbles]
