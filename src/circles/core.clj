@@ -76,12 +76,11 @@
 (def the-width 808)
 (def the-height 500)
 
-; represent a circle as a list, with x coordinate, y coordinate,
+; represent a circle as a map, with x coordinate, y coordinate,
 ; and velocities also for x and y. you need velocities to track
 ; which direction it's going, so you can make it bounce when
 ; it hits an edge.
 (defn circle-as-map []
-  ; x y x-velocity y-velocity
   {:x (int (rand the-width)), :x-velocity 5, :y (int (rand the-height)), :y-velocity 5})
 
 ; start things off with a bunch of random circles
@@ -97,7 +96,7 @@
         y (circle :y)]
     (q/ellipse x y @diameter @diameter)))
 
-; FIXME: dry. macros?
+; FIXME: dry. macros? function composition?
 ; move a circle in the x dimension (horizontal)
 (defn move-x [x x-velocity]
   (if (or (>= (+ x x-velocity) the-width)
