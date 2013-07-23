@@ -6,4 +6,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [quil "1.6.0"]
-                 [overtone "0.8.1"] ])
+                 [overtone "0.8.1"]]
+  :profiles {:dev {:plugins [[lein-kibit "0.0.8"]]}})
+

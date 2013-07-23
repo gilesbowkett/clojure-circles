@@ -59,16 +59,16 @@
           19 (swap! stroke-weight (fn [blarg] velocity))
 
              ; "Instr" button toggles circle drawing
-          76 (swap! draw-circles? (fn [d-c] (not d-c)))
+          76 (swap! draw-circles? not)
 
              ; "Kit" button toggles line drawing
-          77 (swap! draw-lines? (fn [d-l] (not d-l)))
+          77 (swap! draw-lines? not)
 
              ; "Proj" button toggles color cycling
-          78 (swap! cycle-colors? (fn [c-c] (not c-c)))
+          78 (swap! cycle-colors? not)
 
              ; pushing big selection knob as button toggles background modes
-          90 (swap! reset-background (fn [reset-bkg] (not reset-bkg))))
+          90 (swap! reset-background not))
 
   ) ::note-printer)
 
@@ -177,10 +177,10 @@
 
   (q/stroke-weight @stroke-weight)
 
-  (if @cycle-colors?
-    (do (swap! stroke-red cycle-color)
-        (swap! stroke-blue cycle-color)
-        (swap! stroke-green cycle-color)))
+  (when @cycle-colors?
+    (swap! stroke-red cycle-color)
+    (swap! stroke-blue cycle-color)
+    (swap! stroke-green cycle-color))
   (q/stroke (first @stroke-red)
             (first @stroke-blue)
             (first @stroke-green))
