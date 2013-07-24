@@ -13,7 +13,7 @@
 
 (defn circle-as-list []
   ; x y x-velocity y-velocity
-  (list (int (rand the-width)) 5 (int (rand the-height)) 5))
+  (list (rand-int the-width) 5 (rand-int the-height) 5))
 
 (def circle-positions
   (atom (list (circle-as-list) (circle-as-list) (circle-as-list)
@@ -53,10 +53,10 @@
             (second new-x-vel)
             (first new-y-vel)
             (second new-y-vel))
-      (list (int (rand the-width))
-            (int (rand 7))
-            (int (rand the-height))
-            (int (rand 11))))))
+      (list (rand-int the-width)
+            (rand-int 7)
+            (rand-int the-height)
+            (rand-int 11)))))
 
 (defn move-circles [circles]
   (map move-circle circles))
