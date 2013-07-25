@@ -96,7 +96,7 @@
             (nth circle-b 2))))) ; y2
 
 (defn draw-lines [bubbles]
-  (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
+  (dorun (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
 
 ;                         hue velocity
 (def stroke-red   (atom '(171 3)))
@@ -135,7 +135,7 @@
   (set-line-characteristics)
   (swap! circle-positions move-circles)
   (draw-lines @circle-positions)
-  (doall (map draw-circle @circle-positions)))
+  (dorun (map draw-circle @circle-positions)))
 
 (defn setup []
   (smooth)
