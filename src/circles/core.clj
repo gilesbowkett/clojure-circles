@@ -162,7 +162,7 @@
 
 ; draw all the lines
 (defn draw-lines [bubbles]
-  (doall (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
+  (dorun (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
 
 ; continually change colors
 (defn cycle-color [hue-and-velocity]
@@ -195,7 +195,7 @@
   (if @draw-lines?
     (draw-lines @circle-positions))
   (if @draw-circles?
-    (doall (map draw-circle @circle-positions)))
+    (dorun (map draw-circle @circle-positions)))
 )
 
 ; initial conditions
