@@ -19,44 +19,44 @@
 (def draw-lines?              (atom false))
 (def cycle-colors?            (atom false))
 
-; fixme: macro?
+; fixme: macro? partial?
 ; change red when knob moves
-(defn mutate-red-from-finger [finger] ; fixme: terrible naming
+(defn mutate-red [finger] ; fixme: terrible naming
   (swap! stroke-red (fn [blarg] (list (int (* 1.9 finger)) 3))))
 
 ; change blue when knob moves
-(defn mutate-blue-from-finger [finger] ; fixme: terrible naming
+(defn mutate-blue [finger] ; fixme: terrible naming
   (swap! stroke-blue (fn [blarg] (list (int (* 1.9 finger)) 23))))
 
 ; change green when knob moves
-(defn mutate-green-from-finger [finger] ; fixme: terrible naming
+(defn mutate-green [finger] ; fixme: terrible naming
   (swap! stroke-green (fn [blarg] (list (int (* 1.9 finger)) 7))))
 
 ; event handler: "do this any time any MIDI info comes in"
 (o/on-event [:midi :control-change]
-  (fn [{note :note data :data1 velocity :velocity}]
-        (println note data velocity) ; this use of velocity makes no sense to me at all btw
-                                     ; but that's more about arturia and/or midi than clojure
+  ; arturia sparkle seems to send velocity where it should send data, and vice versa?
+  (fn [{note :note velocity :data1 data :velocity}]
+        (println note velocity data)
         (case note
           ; controller numbers link up to changes the controllers cause
 
              ; tempo knob controls circle diameter
-           7 (swap! diameter (fn [blarg] (* 3 velocity)))
+           7 (swap! diameter (fn [blarg] (* 3 data)))
 
              ; volume knob controls length of lines
-          10 (swap! the-distance-threshold (fn [blarg] (* 2 (+ velocity (int (rand 25))))))
+          10 (swap! the-distance-threshold (fn [blarg] (* 2 (+ data (int (rand 25))))))
 
              ; P1 knob controls red
-          16 (mutate-red-from-finger velocity)
+          16 (mutate-red data)
 
              ; P2 knob controls blue
-          17 (mutate-blue-from-finger velocity)
+          17 (mutate-blue data)
 
              ; P3 knob controls green
-          18 (mutate-green-from-finger velocity)
+          18 (mutate-green data)
 
              ; big selection knob controls line thickness
-          19 (swap! stroke-weight (fn [blarg] velocity))
+          19 (swap! stroke-weight (fn [blarg] data))
 
              ; "Instr" button toggles circle drawing
           76 (swap! draw-circles? not)
