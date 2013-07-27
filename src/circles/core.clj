@@ -115,7 +115,7 @@
 (defn set-line-characteristics []
 
   (swap! stroke-modulation-rate-throttle inc)
-  (if (= 0 (rem @stroke-modulation-rate-throttle 14))
+  (if (zero? (rem @stroke-modulation-rate-throttle 14))
      (stroke-weight (int (swap! one-cos-memo one-cos-sq))))
 
   (swap! stroke-red cycle-color)
@@ -128,7 +128,7 @@
   (fill 255 255 255))
 
 (defn draw []
-  (if (= 0 (rem @stroke-modulation-rate-throttle 100))
+  (if (zero? (rem @stroke-modulation-rate-throttle 100))
     (if (> 0.9 (rand))
       (background 255)
       (background 0)))
