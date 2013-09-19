@@ -19,18 +19,12 @@
 (def draw-lines?              (atom false))
 (def cycle-colors?            (atom false))
 
-; fixme: macro? partial?
-; change red when knob moves
-(defn mutate-red [finger] ; fixme: terrible naming
-  (swap! stroke-red (fn [blarg] (list (int (* 1.9 finger)) 3))))
+(defn mutate-rgb [rgb velocity knob-movement]
+  (swap! rgb (fn [_] (list (int (* 1.9 knob-movement)) velocity))))
 
-; change blue when knob moves
-(defn mutate-blue [finger] ; fixme: terrible naming
-  (swap! stroke-blue (fn [blarg] (list (int (* 1.9 finger)) 23))))
-
-; change green when knob moves
-(defn mutate-green [finger] ; fixme: terrible naming
-  (swap! stroke-green (fn [blarg] (list (int (* 1.9 finger)) 7))))
+(def mutate-red (partial mutate-rgb stroke-red 3))
+(def mutate-blue (partial mutate-rgb stroke-blue 23))
+(def mutate-green (partial mutate-rgb stroke-green 7))
 
 ; event handler: "do this any time any MIDI info comes in"
 (o/on-event [:midi :control-change]
