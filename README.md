@@ -11,7 +11,7 @@ a screensaver-like generative visual art piece.
 an art toy which allows you to tweak, with an Arturia Spark LE drum machine, the
 characteristics of an automatic drawing / animation system.
 
-<iframe width="640" height="360" src="//www.youtube.com/embed/5BoDDcvmHOY" frameborder="0" allowfullscreen></iframe>
+http://www.youtube.com/watch?v=5BoDDcvmHOY
 
 ## License
 
