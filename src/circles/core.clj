@@ -61,18 +61,6 @@
 (defn move-circles [circles]
   (map move-circle circles))
 
-; worked, but non-idiomatic, and memory problems
-; (defn bubble-coordinates [list-a list-b]
-;   (loop [result ()
-;          list-a list-a
-;          list-b list-b]
-;     (if (empty? list-a)
-;         result
-;         (recur (concat result (map (fn [bubble]
-;                                      (list (first list-a) bubble))
-;                                    list-b)
-;                               result) (rest list-a) list-b))))
-
 ; idiomatic version, using sequence comprehensions
 ; https://gist.github.com/gilesbowkett/5893860
 (defn bubble-coordinates [seq-1 seq-2]
