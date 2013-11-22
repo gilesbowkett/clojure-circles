@@ -29,9 +29,9 @@
 ; event handler: "do this any time any MIDI control change message comes in"
 (o/on-event [:midi :control-change]
   ; arturia sparkle seems to send velocity where it should send data, and vice versa?
-  (fn [{note :note velocity :data1 data :velocity}]
-        (println note velocity data)
-        (case note
+  (fn [{controller-number :controller-number velocity :data1 data :velocity}]
+        (println controller-number velocity data)
+        (case controller-number
           ; controller numbers link up to changes the controllers cause
 
              ; tempo knob controls circle diameter
