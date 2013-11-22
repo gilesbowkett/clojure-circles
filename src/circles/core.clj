@@ -35,10 +35,10 @@
           ; controller numbers link up to changes the controllers cause
 
              ; tempo knob controls circle diameter
-           7 (swap! diameter (fn [blarg] (* 3 data)))
+           7 (swap! diameter (fn [_] (* 3 data)))
 
              ; volume knob controls length of lines
-          10 (swap! the-distance-threshold (fn [blarg] (* 2 (+ data (int (rand 25))))))
+          10 (swap! the-distance-threshold (fn [_] (* 2 (+ data (int (rand 25))))))
 
              ; P1 knob controls red
           16 (mutate-red data)
@@ -50,7 +50,7 @@
           18 (mutate-green data)
 
              ; big selection knob controls line thickness
-          19 (swap! stroke-weight (fn [blarg] data))
+          19 (swap! stroke-weight (fn [_] data))
 
              ; "Instr" button toggles circle drawing
           76 (swap! draw-circles? not)
