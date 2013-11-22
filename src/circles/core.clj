@@ -26,7 +26,7 @@
 (def mutate-blue (partial mutate-rgb stroke-blue 23))
 (def mutate-green (partial mutate-rgb stroke-green 7))
 
-; event handler: "do this any time any MIDI info comes in"
+; event handler: "do this any time any MIDI control change message comes in"
 (o/on-event [:midi :control-change]
   ; arturia sparkle seems to send velocity where it should send data, and vice versa?
   (fn [{note :note velocity :data1 data :velocity}]
@@ -90,20 +90,12 @@
         y (circle :y)]
     (q/ellipse x y @diameter @diameter)))
 
-; FIXME: dry. macros? function composition?
-; move a circle in the x dimension (horizontal)
-(defn move-x [x x-velocity]
-  (if (or (>= (+ x x-velocity) the-width)
-          (<= (+ x x-velocity) 0))
-      (list x (* -1 x-velocity))
-      (list (+ x-velocity x) x-velocity)))
-
-; move a circle in the y dimension (vertical)
-(defn move-y [y y-velocity]
-  (if (or (>= (+ y y-velocity) the-height)
-          (<= (+ y y-velocity) 0))
-      (list y (* -1 y-velocity))
-      (list (+ y-velocity y) y-velocity)))
+(defn move [position velocity boundary]
+  (let [destination (+ position velocity)]
+    (if (or (>= destination boundary)
+            (<= destination 0))
+        (list position (* -1 velocity))
+        (list (+ position velocity) velocity))))
 
 ; move a circle
 (defn move-circle [circle]
@@ -112,15 +104,15 @@
         y (circle :y)
         y-velocity (circle :y-velocity)
 
-        new-x-vel (move-x x x-velocity)
-        new-y-vel (move-y y y-velocity)]
+        new-x-vector (move x x-velocity the-width)
+        new-y-vector (move y y-velocity the-height)]
 
     ; move 99% of circles; teleport 1%
     (if (> 0.99 (rand))
-      {:x (first new-x-vel),
-       :x-velocity (second new-x-vel),
-       :y (first new-y-vel),
-       :y-velocity (second new-y-vel)}
+      {:x (first new-x-vector),
+       :x-velocity (second new-x-vector),
+       :y (first new-y-vector),
+       :y-velocity (second new-y-vector)}
       {:x (int (rand the-width)),
        :x-velocity (int (rand 7)),
        :y (int (rand the-height)),
