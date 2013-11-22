@@ -45,14 +45,14 @@
         y (nth circle 2)
         y-velocity (nth circle 3)
 
-        new-x-vel (move-x x x-velocity)
-        new-y-vel (move-y y y-velocity)]
+        new-x-vector (move-x x x-velocity)
+        new-y-vector (move-y y y-velocity)]
 
     (if (> 0.99 (rand))
-      (list (first new-x-vel)
-            (second new-x-vel)
-            (first new-y-vel)
-            (second new-y-vel))
+      (list (first new-x-vector)
+            (second new-x-vector)
+            (first new-y-vector)
+            (second new-y-vector))
       (list (rand-int the-width)
             (rand-int 7)
             (rand-int the-height)
