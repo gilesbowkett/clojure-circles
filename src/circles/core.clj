@@ -181,8 +181,7 @@
   (if @draw-lines?
     (draw-lines @circle-positions))
   (if @draw-circles?
-    (dorun (map draw-circle @circle-positions)))
-)
+    (dorun (map draw-circle @circle-positions))))
 
 ; initial conditions
 (defn setup []
