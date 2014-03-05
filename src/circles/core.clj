@@ -15,54 +15,27 @@
 (def stroke-weight            (atom 1))
 (def reset-background         (atom false))
 (def the-distance-threshold   (atom 150))
-(def draw-circles?            (atom false))
-(def draw-lines?              (atom false))
-(def cycle-colors?            (atom false))
+(def draw-circles?            (atom true))
+(def draw-lines?              (atom true))
 
-(defn mutate-rgb [rgb velocity knob-movement]
-  (swap! rgb (fn [_] (list (int (* 1.9 knob-movement)) velocity))))
+(defn wtf123 [hue-and-velocity]
+  (list 171 3))
 
-(def mutate-red (partial mutate-rgb stroke-red 3))
-(def mutate-blue (partial mutate-rgb stroke-blue 23))
-(def mutate-green (partial mutate-rgb stroke-green 7))
+; event handler: "do this any time any MIDI message comes in"
+(o/on-event [:midi :note-on]
+  ; arturia sparkle (or overtone) seems to send velocity where it should send data, and vice versa?
+  (fn [{note-number :note velocity :velocity}]
+        (println note-number velocity)
+        (case note-number
+          49 (swap! stroke-red wtf123)
+          43 (swap! stroke-blue wtf123)
+          47 (swap! stroke-green wtf123)
+          50 (swap! stroke-blue wtf123)
+          46 (swap! stroke-green wtf123)
+          42 (swap! stroke-green wtf123)
+          38 (swap! stroke-blue wtf123)
+          36 (swap! stroke-red wtf123))
 
-; event handler: "do this any time any MIDI control change message comes in"
-(o/on-event [:midi :control-change]
-  ; arturia sparkle seems to send velocity where it should send data, and vice versa?
-  (fn [{controller-number :note velocity :data1 data :velocity}]
-        (println controller-number velocity data)
-        (case controller-number
-          ; controller numbers link up to changes the controllers cause
-
-             ; tempo knob controls circle diameter
-           7 (swap! diameter (fn [_] (* 3 data)))
-
-             ; volume knob controls length of lines
-          10 (swap! the-distance-threshold (fn [_] (* 2 (+ data (int (rand 25))))))
-
-             ; P1 knob controls red
-          16 (mutate-red data)
-
-             ; P2 knob controls blue
-          17 (mutate-blue data)
-
-             ; P3 knob controls green
-          18 (mutate-green data)
-
-             ; big selection knob controls line thickness
-          19 (swap! stroke-weight (fn [_] data))
-
-             ; "Instr" button toggles circle drawing
-          76 (swap! draw-circles? not)
-
-             ; "Kit" button toggles line drawing
-          77 (swap! draw-lines? not)
-
-             ; "Proj" button toggles color cycling
-          78 (swap! cycle-colors? not)
-
-             ; pushing big selection knob as button toggles background modes
-          90 (swap! reset-background not))
 
   ) ::note-printer)
 
@@ -151,22 +124,21 @@
   (dorun (map draw-line (distinct (bubble-coordinates bubbles bubbles)))))
 
 ; continually change colors
-(defn cycle-color [hue-and-velocity]
+(defn decay-color [hue-and-velocity]
   (let [hue (first hue-and-velocity)
         velocity (second hue-and-velocity)]
-    (if (or (>= hue 255) (<= hue 0))
-        (list (+ hue (* -1 velocity)) (* -1 velocity))
-        (list (+ hue velocity) velocity))))
+    (if (> hue 0)
+        (list (- hue velocity) velocity)
+        (list hue velocity))))
 
 ; line color & thickness; also circle color
 (defn set-line-characteristics []
 
   (q/stroke-weight @stroke-weight)
 
-  (when @cycle-colors?
-    (swap! stroke-red cycle-color)
-    (swap! stroke-blue cycle-color)
-    (swap! stroke-green cycle-color))
+  (swap! stroke-red decay-color)
+  (swap! stroke-blue decay-color)
+  (swap! stroke-green decay-color)
   (q/stroke (first @stroke-red)
             (first @stroke-blue)
             (first @stroke-green))
