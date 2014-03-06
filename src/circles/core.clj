@@ -8,18 +8,86 @@
 
 ; clojure quirk for concurrency / software-transactional memory
 ; tldr: global variables
-(def diameter                 (atom 10))
+(def diameter                 (atom 75))
 (def stroke-red               (atom '(171 3)))
 (def stroke-blue              (atom '(163 23)))
 (def stroke-green             (atom '(225 7)))
 (def stroke-weight            (atom 1))
 (def reset-background         (atom false))
 (def the-distance-threshold   (atom 150))
-(def draw-circles?            (atom true))
+(def draw-circles?            (atom false))
 (def draw-lines?              (atom true))
 
-(defn wtf123 [hue-and-velocity]
-  (list 171 3))
+; fixme: dry (use partial, probably)
+(defn kick []
+  (swap! stroke-red
+    (fn [hue-and-velocity]
+      (let [hue (first hue-and-velocity)
+            velocity (second hue-and-velocity)]
+        (if (> 255 (+ 10 hue))
+            (list 255 velocity)
+            (list (+ 10 hue) velocity)))))
+  (swap! stroke-weight
+    (fn [stroke-weight]
+      (if (< 125 (+ stroke-weight 15))
+          stroke-weight
+          (+ stroke-weight 15)))))
+
+(defn snare []
+  (swap! stroke-red
+    (fn [hue-and-velocity]
+      (let [hue (first hue-and-velocity)
+            velocity (second hue-and-velocity)]
+        (if (> 155 (+ 50 hue))
+            (list 155 velocity)
+            (list (+ 50 hue) velocity)))))
+  (swap! stroke-blue
+    (fn [hue-and-velocity]
+      (let [hue (first hue-and-velocity)
+            velocity (second hue-and-velocity)]
+        (if (> 255 (+ 50 hue))
+            (list 255 velocity)
+            (list (+ 50 hue) velocity)))))
+  (swap! stroke-weight
+    (fn [stroke-weight]
+      (if (< 125 (+ stroke-weight 25))
+          stroke-weight
+          (+ stroke-weight 25)))))
+
+(defn crash []
+  (swap! reset-background not)
+  (swap! stroke-red
+    (fn [hue-and-velocity]
+      (let [hue (first hue-and-velocity)
+            velocity (second hue-and-velocity)]
+        (if (< 0 (- 2 hue))
+            (list 0 velocity)
+            (list (- 2 hue) velocity)))))
+  (swap! stroke-green
+    (fn [hue-and-velocity]
+      (let [hue (first hue-and-velocity)
+            velocity (second hue-and-velocity)]
+        (if (> 255 (+ 25 hue))
+            (list 255 velocity)
+            (list (+ 25 hue) velocity)))))
+  (swap! stroke-weight
+    (fn [stroke-weight]
+      (if (> 0 (- stroke-weight 10))
+          stroke-weight
+          (- stroke-weight 10)))))
+
+(defn hat []
+  (swap! stroke-green
+    (fn [hue-and-velocity]
+      (list 100 10)))
+  (swap! stroke-red
+    (fn [hue-and-velocity]
+      (list 130 10)))
+  (swap! stroke-green
+    (fn [hue-and-velocity]
+      (list 250 10)))
+  (swap! stroke-weight
+    (fn [weight] 1)))
 
 ; event handler: "do this any time any MIDI message comes in"
 (o/on-event [:midi :note-on]
@@ -27,17 +95,11 @@
   (fn [{note-number :note velocity :velocity}]
         (println note-number velocity)
         (case note-number
-          49 (swap! stroke-red wtf123)
-          43 (swap! stroke-blue wtf123)
-          47 (swap! stroke-green wtf123)
-          50 (swap! stroke-blue wtf123)
-          46 (swap! stroke-green wtf123)
-          42 (swap! stroke-green wtf123)
-          38 (swap! stroke-blue wtf123)
-          36 (swap! stroke-red wtf123))
-
-
-  ) ::note-printer)
+          64 (kick)
+          60 (crash)
+          67 (hat)
+          65 (snare)
+  )) ::note-printer)
 
 ; global vars for drawing stuff
 (def the-width 808)
@@ -131,10 +193,18 @@
         (list (- hue velocity) velocity)
         (list hue velocity))))
 
+; continually shrink circles
+(defn shrink-circles [diameter]
+    (if (> diameter 5)
+        (- diameter 1)
+        5))
+
 ; line color & thickness; also circle color
 (defn set-line-characteristics []
 
   (q/stroke-weight @stroke-weight)
+
+  (swap! diameter shrink-circles)
 
   (swap! stroke-red decay-color)
   (swap! stroke-blue decay-color)
