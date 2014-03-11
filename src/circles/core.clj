@@ -9,9 +9,9 @@
 ; clojure quirk for concurrency / software-transactional memory
 ; tldr: global variables
 (def diameter                 (atom 75))
-(def stroke-red               (atom '(171 3)))
+(def stroke-red               (atom '(171 11)))
 (def stroke-blue              (atom '(163 23)))
-(def stroke-green             (atom '(225 7)))
+(def stroke-green             (atom '(225 17)))
 (def stroke-weight            (atom 1))
 (def reset-background         (atom false))
 (def the-distance-threshold   (atom 150))
