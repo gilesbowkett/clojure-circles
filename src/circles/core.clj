@@ -12,8 +12,8 @@
   (/ 1 (Math/pow (Math/cos number) 2)))
 
 (defn circle-as-list []
-  ; x y x-velocity y-velocity
-  (list (rand-int the-width) 5 (rand-int the-height) 5))
+  ; x y x-velocity y-velocity rotation
+  (list (rand-int the-width) 5 (rand-int the-height) 5 (- 180 (rand-int 360))))
 
 (def circle-positions
   (atom (list (circle-as-list) (circle-as-list) (circle-as-list)
@@ -24,8 +24,12 @@
 (defn draw-circle [circle]
   (let [diam 20
         x (nth circle 0)
-        y (nth circle 2)]
-    (ellipse x y diam diam)))
+        y (nth circle 2)
+        rotation (nth circle 4)]
+    (rotate (radians rotation))
+    (triangle x (- y 75)
+                (+ x 40) (+ y 15)
+                (- x 40) (+ y 15))))
 
 (defn move-x [x x-velocity]
   (if (or (>= (+ x x-velocity) the-width)
@@ -44,6 +48,7 @@
         x-velocity (nth circle 1)
         y (nth circle 2)
         y-velocity (nth circle 3)
+        rotation (+ 0.2 (nth circle 4)) ; FIXME: use idiomatic Clojure
 
         new-x-vector (move-x x x-velocity)
         new-y-vector (move-y y y-velocity)]
@@ -52,11 +57,13 @@
       (list (first new-x-vector)
             (second new-x-vector)
             (first new-y-vector)
-            (second new-y-vector))
+            (second new-y-vector)
+            rotation)
       (list (rand-int the-width)
             (rand-int 7)
             (rand-int the-height)
-            (rand-int 11)))))
+            (rand-int 11)
+            rotation))))
 
 (defn move-circles [circles]
   (map move-circle circles))
@@ -112,14 +119,13 @@
   (stroke (first @stroke-red)
           (first @stroke-blue)
           (first @stroke-green))
-
-  (fill 255 255 255))
+  (no-fill))
 
 (defn draw []
   (if (zero? (rem @stroke-modulation-rate-throttle 100))
     (if (> 0.9 (rand))
-      (background 255)
-      (background 0)))
+      (background 0)
+      (background 255)))
   (set-line-characteristics)
   (swap! circle-positions move-circles)
   (draw-lines @circle-positions)
