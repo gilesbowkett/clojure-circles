@@ -15,12 +15,15 @@
 (def stroke-weight            (atom 1))
 (def reset-background         (atom false))
 (def the-distance-threshold   (atom 150))
-(def draw-circles?            (atom false))
-(def draw-lines?              (atom true))
+(def draw-circles?            (atom true))
+(def draw-lines?              (atom false))
 
-; fixme: dry (use partial, probably)
+; epic fixme: dry (use partial, probably)
 (defn kick []
+  (swap! reset-background (fn [_] false))
   (swap! stroke-red
+    ; these extremely non-dry hue/velocity effectors always affect only the
+    ; hue. might be fun to affect the velocity as well, or indeed direction
     (fn [hue-and-velocity]
       (let [hue (first hue-and-velocity)
             velocity (second hue-and-velocity)]
@@ -31,9 +34,12 @@
     (fn [stroke-weight]
       (if (< 125 (+ stroke-weight 15))
           stroke-weight
-          (+ stroke-weight 15)))))
+          (+ stroke-weight 15))))
+  (swap! diameter
+    (fn [diameter] 0)))
 
 (defn snare []
+  ; (swap! reset-background (fn [_] false))
   (swap! stroke-red
     (fn [hue-and-velocity]
       (let [hue (first hue-and-velocity)
@@ -52,10 +58,14 @@
     (fn [stroke-weight]
       (if (< 125 (+ stroke-weight 25))
           stroke-weight
-          (+ stroke-weight 25)))))
+          (+ stroke-weight 25))))
+  (swap! diameter
+    (fn [diameter]
+      (if (< 275 (+ diameter 15))
+          diameter
+          (+ diameter 15)))))
 
 (defn crash []
-  (swap! reset-background not)
   (swap! stroke-red
     (fn [hue-and-velocity]
       (let [hue (first hue-and-velocity)
@@ -77,7 +87,7 @@
           (- stroke-weight 10)))))
 
 (defn hat []
-  (swap! stroke-green
+  (swap! stroke-blue
     (fn [hue-and-velocity]
       (list 100 10)))
   (swap! stroke-red
@@ -87,7 +97,10 @@
     (fn [hue-and-velocity]
       (list 250 10)))
   (swap! stroke-weight
-    (fn [weight] 1)))
+    (fn [stroke-weight]
+      (if (> 200 (+ stroke-weight 35))
+          stroke-weight
+          (+ stroke-weight 35)))))
 
 ; event handler: "do this any time any MIDI message comes in"
 (o/on-event [:midi :note-on]
@@ -207,13 +220,23 @@
   (swap! diameter shrink-circles)
 
   (swap! stroke-red decay-color)
-  (swap! stroke-blue decay-color)
   (swap! stroke-green decay-color)
-  (q/stroke (first @stroke-red)
-            (first @stroke-blue)
-            (first @stroke-green))
+  (swap! stroke-blue decay-color)
 
-  (q/fill 0))
+  ; reset upon hitting black
+  (if (and (< (first @stroke-red) 5)
+           (< (first @stroke-green) 5)
+           (< (first @stroke-blue) 5))
+    (swap! reset-background (fn [_] true)))
+
+  (q/stroke (first @stroke-red)
+            (first @stroke-green)
+            (first @stroke-blue))
+
+  ; fixme: dry
+  (q/fill (first @stroke-red)
+          (first @stroke-green)
+          (first @stroke-blue)))
 
 ; main drawing loop
 (defn draw []
