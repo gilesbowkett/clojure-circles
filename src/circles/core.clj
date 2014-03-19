@@ -109,6 +109,7 @@
         (println note-number velocity)
         (case note-number
           64 (kick)
+          36 (kick)
           60 (crash)
           67 (hat)
           65 (snare)
