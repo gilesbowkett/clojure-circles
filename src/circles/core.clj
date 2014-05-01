@@ -3,8 +3,8 @@
 
 ; Quil (Processing)
 
-(def the-width 808)
-(def the-height 500)
+(def the-width 1200)
+(def the-height 700)
 (def the-distance-threshold 150)
 
 (def one-cos-memo (atom 1))
@@ -129,11 +129,16 @@
   (smooth)
   (frame-rate 35))
 
+(japplemenubar.JAppleMenuBar/hide)
+
+; (.. (Class/forName "japplemenubar.JAppleMenuBar") (.getDeclaredMethod "hide") (.invoke nil))
+
 (defsketch circles
   :title "Circles"
   :setup setup
   :draw draw
-  :size [the-width the-height])
+  ; :decor false
+  :size :fullscreen)
 
 ; leiningen boilerplate
 
