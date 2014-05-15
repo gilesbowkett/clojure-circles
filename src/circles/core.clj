@@ -67,8 +67,8 @@
   ) ::note-printer)
 
 ; global vars for drawing stuff
-(def the-width 808)
-(def the-height 500)
+(def the-width 1280)
+(def the-height 720)
 
 ; represent a circle as a map, with x coordinate, y coordinate,
 ; and velocities also for x and y. you need velocities to track
@@ -189,12 +189,14 @@
   (q/background 0)
   (q/frame-rate 35))
 
+(japplemenubar.JAppleMenuBar/hide)
+
 ; Quil (Processing) thing: set up your "sketch"
 (q/defsketch circles
   :title "Circles"
   :setup setup
   :draw draw
-  :size [the-width the-height])
+  :size :fullscreen)
 
 ; leiningen boilerplate
 
