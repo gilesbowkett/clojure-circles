@@ -31,7 +31,9 @@
 ; easy, but the cool thing is, it makes it possible for you to put all the color
 ; settings on one note, and all the "what shapes to draw" settings on another
 ; note, and then control those factors by playing chords. that probably won't make
-; it into this weekend's performance, but it's a nice design.
+; it into this weekend's performance, but it's a nice design. but it'll only work
+; if I change the code slightly to accomodate the possibility of settings not
+; having particular keys.
 
 (defn preset [settings]
   (swap! diameter (fn [_] (settings :diameter))) ; epic FIXME DRY
@@ -52,102 +54,109 @@
         (case note-number
 
           36 ( ; big, stringy network graph
+               ;   (white, but switch on color cycling to make it fast greyscale)
                preset {:diameter 15
-                        :stroke-red '(255 0)
-                        :stroke-blue '(255 0)
-                        :stroke-green '(255 0)
-                        :stroke-weight 3
-                        :reset-background true
-                        :the-distance-threshold 500
-                        :draw-circles? true
-                        :draw-lines? true
-                        :cycle-colors? false})
+                       :stroke-red '(255 23)
+                       :stroke-blue '(255 23)
+                       :stroke-green '(255 23)
+                       :stroke-weight 3
+                       :reset-background true
+                       :the-distance-threshold 500
+                       :draw-circles? true
+                       :draw-lines? true
+                       :cycle-colors? false})
+
           38 ( ; blue simple network graph
                preset {:diameter 125
-                        :stroke-red '(75 0)
-                        :stroke-blue '(215 0)
-                        :stroke-green '(100 0)
-                        :stroke-weight 35
-                        :reset-background true
-                        :the-distance-threshold 250
-                        :draw-circles? true
-                        :draw-lines? true
-                        :cycle-colors? false})
+                       :stroke-red '(75 0)
+                       :stroke-blue '(215 0)
+                       :stroke-green '(100 0)
+                       :stroke-weight 35
+                       :reset-background true
+                       :the-distance-threshold 250
+                       :draw-circles? true
+                       :draw-lines? true
+                       :cycle-colors? false})
+
           42 ( ; flashing blue
                preset {:diameter 100
-                        :stroke-red '(0 0)
-                        :stroke-blue '(215 50)
-                        :stroke-green '(0 0)
-                        :stroke-weight 25
-                        :reset-background true
-                        :the-distance-threshold 250
-                        :draw-circles? true
-                        :draw-lines? false
-                        :cycle-colors? true})
+                       :stroke-red '(0 0)
+                       :stroke-blue '(215 50)
+                       :stroke-green '(0 0)
+                       :stroke-weight 25
+                       :reset-background true
+                       :the-distance-threshold 250
+                       :draw-circles? true
+                       :draw-lines? false
+                       :cycle-colors? true})
+
           46 ( ; pulsing red network
                preset {:diameter 10
-                        :stroke-red '(235 52)
-                        :stroke-blue '(15 0)
-                        :stroke-green '(15 0)
-                        :stroke-weight 1
-                        :reset-background false
-                        :the-distance-threshold 250
-                        :draw-circles? true
-                        :draw-lines? true
-                        :cycle-colors? true})
+                       :stroke-red '(235 52)
+                       :stroke-blue '(15 0)
+                       :stroke-green '(15 0)
+                       :stroke-weight 1
+                       :reset-background false
+                       :the-distance-threshold 250
+                       :draw-circles? true
+                       :draw-lines? true
+                       :cycle-colors? true})
+
           50 ( ; adventure time!
                preset {:diameter 100
-                        :stroke-red '(255 3)
-                        :stroke-blue '(255 2)
-                        :stroke-green '(255 1)
-                        :stroke-weight 57
-                        :reset-background false
-                        :the-distance-threshold 250
-                        :draw-circles? true
-                        :draw-lines? true
-                        :cycle-colors? true})
+                       :stroke-red '(255 3)
+                       :stroke-blue '(255 2)
+                       :stroke-green '(255 1)
+                       :stroke-weight 57
+                       :reset-background false
+                       :the-distance-threshold 250
+                       :draw-circles? true
+                       :draw-lines? true
+                       :cycle-colors? true})
+
           47 ( ; glowsticks
                preset {:diameter 500
-                        :stroke-red '(255 1)
-                        :stroke-blue '(255 5)
-                        :stroke-green '(255 10)
-                        :stroke-weight 100
-                        :reset-background false
-                        :the-distance-threshold 150
-                        :draw-circles? true
-                        :draw-lines? true
-                        :cycle-colors? true})
+                       :stroke-red '(255 1)
+                       :stroke-blue '(255 5)
+                       :stroke-green '(255 10)
+                       :stroke-weight 100
+                       :reset-background false
+                       :the-distance-threshold 150
+                       :draw-circles? true
+                       :draw-lines? true
+                       :cycle-colors? true})
+
           43 ( ; slow-ass greyscale
                preset {:diameter 100
-                        :stroke-red '(255 1)
-                        :stroke-blue '(255 1)
-                        :stroke-green '(255 1)
-                        :stroke-weight 11
-                        :reset-background false
-                        :the-distance-threshold 250
-                        :draw-circles? true
-                        :draw-lines? true
-                        :cycle-colors? true})
-          49 (
+                       :stroke-red '(255 1)
+                       :stroke-blue '(255 1)
+                       :stroke-green '(255 1)
+                       :stroke-weight 11
+                       :reset-background false
+                       :the-distance-threshold 250
+                       :draw-circles? true
+                       :draw-lines? true
+                       :cycle-colors? true})
+
+          49 ( ; (near) default
                preset {:diameter 55
-                        :stroke-red '(171 3)
-                        :stroke-blue '(225 7)
-                        :stroke-green '(163 23)
-                        :stroke-weight 1
-                        :reset-background false
-                        :the-distance-threshold 150
-                        :draw-circles? true
-                        :draw-lines? true
-                        :cycle-colors? true}))
+                       :stroke-red '(171 3)
+                       :stroke-blue '(225 7)
+                       :stroke-green '(163 23)
+                       :stroke-weight 1
+                       :reset-background false
+                       :the-distance-threshold 150
+                       :draw-circles? true
+                       :draw-lines? true
+                       :cycle-colors? true}))
   ) ::handle-note-on)
 
 (o/on-event [:midi :note-off]
   (fn [{note-number :note velocity :velocity}]
         (println "off" note-number velocity)
-        ; actual functionality goes here
+        ; actual functionality goes here, if I ever write any
   ) ::handle-note-off)
 
-; event handler: "do this any time any MIDI control change message comes in"
 (o/on-event [:midi :control-change]
   ; arturia sparkle seems to send velocity where it should send data, and vice versa?
   (fn [{controller-number :note velocity :data1 data :velocity}]
