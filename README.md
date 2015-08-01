@@ -13,7 +13,7 @@ characteristics of an automatic drawing / animation system.
 
 ## License
 
-Copyright © 2013 Giles Bowkett
+Copyright © 2013-2014 Giles Bowkett
 
 Distributed under the MIT License
 
