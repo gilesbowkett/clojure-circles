@@ -13,9 +13,11 @@ characteristics of an automatic drawing / animation system.
 
 http://www.youtube.com/watch?v=5BoDDcvmHOY
 
+development's marginally more active here.
+
 ## License
 
-Copyright © 2013 Giles Bowkett
+Copyright © 2013-2016 Giles Bowkett
 
-Distributed under the MIT License
+Distributed under the Eclipse License, as it's Clojure
 
